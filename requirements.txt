@@ -5,3 +5,4 @@ pandas
 gunicorn
 plotly
 datetime
+requests
