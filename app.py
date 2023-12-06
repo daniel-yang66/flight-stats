@@ -17,15 +17,15 @@ load_figure_template('darkly')
 app.layout = dbc.Container([
     html.H2(id='title', children="Real-Time Scheduled & Active Flight Stats", style = {'text-align':'center','font-weight':'bold','font-size':35, 'font-family':'sans-serif'}),
     dbc.Row(dcc.Link('Powered by aviationstack',href = 'https://aviationstack.com/'), style = {'text-align':'center','font-size':20}),
-    # dbc.Row([
-    #     dbc.Col([
+     dbc.Row([
+         dbc.Col([
         
-    #     html.H3('Origin Airport:', style={'margin-bottom':15, 'font-size':25, 'font-family':'sans-serif'}),
-    #     dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 11})]),
-    #     dbc.Col([
-    #     html.H3('Destination Airport:', style={'margin-bottom':15,'font-size':25, 'font-family':'sans-serif'}),
-    #     dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 11})])], style = {'text-align':'center'}),
-    #     html.Br(),
+         html.H3('Origin Airport:', style={'margin-bottom':15, 'font-size':25, 'font-family':'sans-serif'}),
+         dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 11})]),
+         dbc.Col([
+         html.H3('Destination Airport:', style={'margin-bottom':15,'font-size':25, 'font-family':'sans-serif'}),
+         dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 11})])], style = {'text-align':'center'}),
+         html.Br(),
         dbc.Row(
         html.Button('View Stats', id='submit', style = {'margin-bottom':10,'width':300, 'margin-left':420,'border-radius':30,'background-color':'green','color':'white'}), style = {'text-align':'center'}),
         dbc.Row([
@@ -33,33 +33,31 @@ app.layout = dbc.Container([
             dcc.Graph(id='pie')
         ])
         
+        ])
+])
+
+@app.callback(Output('title','children'),Output('pie','figure'), Input('dep','value'), Input('arr','value'))
+def view_stats(dep,arr):
     
-])])
-
-@app.callback(Output('title','children'),Output('pie','figure'))
-def view_stats():
-
     params = {
       'access_key': '349746e955fc67b11e41ece61dfad998',
-        'dep_iata':'SFO',
-        'arr_iata':'LAX',
+        'dep_iata':dep,
+        'arr_iata':arr,
         'flight_status':'scheduled'
     }
     params2 = {
       'access_key': '349746e955fc67b11e41ece61dfad998',
-        'dep_iata':'SFO',
-        'arr_iata':'LAX',
+        'dep_iata':dep,
+        'arr_iata':arr,
         'flight_status':'active'
     }
 
     response = requests.get('http://api.aviationstack.com/v1/flights', params)
     data = response.json()
-    response2 = requests.get('http://api.aviationstack.com/v1/flights', params2)
-    data2 = response2.json()
     
-    data_all = data['data'] + data2['data']
+    data_all = data['data']
     
-    title = f"Flight Stats"
+    title = f"Flight Stats {dep} | {arr}"
     
     airlines = []
     delayed = []
@@ -94,7 +92,6 @@ def view_stats():
                 
                 unique_flights.append(flight['flight']['number'])
                 airline = flight['airline']['name']
-                
                 delay = 0
                 if flight['departure']['actual'] != None and flight['departure']['scheduled'] < flight['departure']['actual']:
                     delay += (datetime.strptime(flight['departure']['actual'][0:10] + ' '+ flight['departure']['actual'][11:19], '%Y-%m-%d %H:%M:%S') - datetime.strptime(flight['departure']['actual'][0:10] + ' '+ flight['departure']['actual'][11:19], '%Y-%m-%d %H:%M:%S')).total_seconds() / 60
@@ -112,10 +109,6 @@ def view_stats():
     df = pd.DataFrame(list(zip(airlines, delayed,iata)), columns=['Airline','Delay Status','Count'])
     figure = px.pie(df.groupby('Airline').count().reset_index(),values='Count',names='Airline', hole = 0.7, title='Airline Market Share')
     return title, figure
-    
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
-
-
-
+    app.run_server(debug=True)
