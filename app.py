@@ -12,10 +12,11 @@ from datetime import datetime
 app = Dash(__name__, external_stylesheets = [dbc.themes.SLATE])
 server = app.server
 
-load_figure_template('mint')
+load_figure_template('darkly')
 
 app.layout = dbc.Container([
     html.H2(id='title', children="Real-Time Scheduled & Active Flight Stats", style = {'text-align':'center','font-weight':'bold','font-size':35, 'font-family':'sans-serif'}),
+    dbc.Row(dcc.Link('Powered by aviationstack',href = 'https://aviationstack.com/'), style = {'text-align':'center','font-size':20}),
     dbc.Row([
         dbc.Col([
         
@@ -127,7 +128,7 @@ def view_stats(dep, arr, clicks):
     
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server(debug=True)
 
 
 
