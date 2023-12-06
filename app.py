@@ -16,7 +16,6 @@ load_figure_template('mint')
 
 app.layout = dbc.Container([
     html.H2(id='title', children="Real-Time Scheduled & Active Flight Stats", style = {'text-align':'center','font-weight':'bold','font-size':35, 'font-family':'sans-serif'}),
-        dbc.Row(dcc.Link('Powered by aviationstack',href = 'https://aviationstack.com/'), style = {'text-align':'center','font-size':20}),
     dbc.Row([
         dbc.Col([
         
