@@ -31,15 +31,12 @@ app.layout = dbc.Container([
         dbc.Row([
         dbc.Col([
             dcc.Graph(id='pie')
-        ]),
-        dbc.Col(dbc.Row(
-            dcc.Graph(id='bar')),
-        )])
+        ])])
         
     
 ])
 
-@app.callback(Output("submit", "n_clicks"),Output('title','children'),Output('pie','figure'), Output('bar','figure'), Input('dep','value'), Input('arr','value'), Input('submit','n_clicks'))
+@app.callback(Output("submit", "n_clicks"),Output('title','children'),Output('pie','figure'), Input('dep','value'), Input('arr','value'), Input('submit','n_clicks'))
 def view_stats(dep, arr, clicks):
     if not clicks:
         raise PreventUpdate
@@ -116,15 +113,8 @@ def view_stats(dep, arr, clicks):
 
     df = pd.DataFrame(list(zip(airlines, delayed,iata)), columns=['Airline','Delay Status','Count'])
     figure = px.pie(df.groupby('Airline').count().reset_index(),values='Count',names='Airline', hole = 0.7, title='Airline Market Share')
-    figure2 = px.pie(df.groupby(['Delay Status']).count().reset_index(),values='Count',
-                     color='Delay Status',
-                     color_discrete_map={
-                         'N/A':'yellow',
-                         'On Time':'green',
-                         'Delayed':'red'
-                     }, title = 'On Time vs Delay', hole=0.7)
     clicks = None
-    return clicks,title, figure, figure2
+    return clicks,title, figure
     
 
 if __name__ == '__main__':
