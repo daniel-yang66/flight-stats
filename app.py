@@ -109,7 +109,7 @@ def draw(loc,metric):
     df3 = df3.rename(columns = {'Temp':'Count'})
     
     line = px.line(df, x='Time',y=metric, title = f'{metric} Over Time').update_traces(line_color='green')
-    donut = px.pie(df2, hole = 0.7, values = 'Count', names = 'Condition', title = 'Condition Outlook').update_layout(showlegend=False)
+    donut = px.pie(df2, hole = 0.7, values = 'Count', names = 'conditions_new', title = 'Condition Outlook').update_layout(showlegend=False)
     bar = px.bar(df3, x='Wind Direction', y='Count', title = 'Wind Direction Frequency').update_traces(marker_color = 'green')
     
     return line, donut, bar
