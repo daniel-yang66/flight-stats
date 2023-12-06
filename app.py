@@ -39,7 +39,7 @@ app.layout = dbc.Container([
     
 ])
 
-@app.callback(Output("submit", "n_clicks"),Output('title','children'),Output('pie','figure'), Input('dep','value'), Input('arr','value'), Input('submit','n_clicks'))
+@app.callback(Output("submit", "n_clicks"),Output('title','children'),Output('pie','figure'), Output('bar','figure'), Input('dep','value'), Input('arr','value'), Input('submit','n_clicks'))
 def view_stats(dep, arr, clicks):
     if not clicks:
         raise PreventUpdate
@@ -64,7 +64,7 @@ def view_stats(dep, arr, clicks):
     
     data_all = data['data'] + data2['data']
     
-    title = f"Flight Stats | {dep.upper()} - {arr.upper()}"
+    title = f'{data_all[0]["flight_date"]}'#f"Flight Stats | {dep.upper()} - {arr.upper()}"
     
     airlines = []
     delayed = []
@@ -116,19 +116,19 @@ def view_stats(dep, arr, clicks):
 
     df = pd.DataFrame(list(zip(airlines, delayed,iata)), columns=['Airline','Delay Status','Count'])
     figure = px.pie(df.groupby('Airline').count().reset_index(),values='Count',names='Airline', hole = 0.7, title='Airline Market Share')
-    # figure2 = px.bar(df.groupby(['Airline','Delay Status']).count().reset_index(),x='Airline',y='Count',
-    #                  color='Delay Status',
-    #                  color_discrete_map={
-    #                      'N/A':'yellow',
-    #                      'On Time':'green',
-    #                      'Delayed':'red'
-    #                  }, title = 'On Time vs Delay')
+    figure2 = px.bar(df.groupby(['Airline','Delay Status']).count().reset_index(),x='Airline',y='Count',
+                      color='Delay Status',
+                      color_discrete_map={
+                          'N/A':'yellow',
+                          'On Time':'green',
+                          'Delayed':'red'
+                      }, title = 'On Time vs Delay')
     clicks = None
-    return clicks,title, figure#, figure2
+    return clicks,title, figure, figure2
     
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
 
 
 
