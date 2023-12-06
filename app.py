@@ -64,7 +64,7 @@ def view_stats(dep, arr, clicks):
     
     data_all = data['data'] + data2['data']
     
-    title = f'{data_all[0]["flight_date"]}'#f"Flight Stats | {dep.upper()} - {arr.upper()}"
+    title = f"Flight Stats | {dep.upper()} - {arr.upper()}"
     
     airlines = []
     delayed = []
