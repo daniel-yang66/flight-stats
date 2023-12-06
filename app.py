@@ -116,13 +116,13 @@ def view_stats(dep, arr, clicks):
 
     df = pd.DataFrame(list(zip(airlines, delayed,iata)), columns=['Airline','Delay Status','Count'])
     figure = px.pie(df.groupby('Airline').count().reset_index(),values='Count',names='Airline', hole = 0.7, title='Airline Market Share')
-    figure2 = px.bar(df.groupby(['Airline','Delay Status']).count().reset_index(),x='Airline',y='Count',
+    figure2 = px.pie(df.groupby(['Delay Status']).count().reset_index(),values='Count',
                      color='Delay Status',
                      color_discrete_map={
                          'N/A':'yellow',
                          'On Time':'green',
                          'Delayed':'red'
-                     }, title = 'On Time vs Delay')
+                     }, title = 'On Time vs Delay', hole=0.7)
     clicks = None
     return clicks,title, figure, figure2
     
