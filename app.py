@@ -59,10 +59,10 @@ def view_stats(dep, arr, clicks):
 
     response = requests.get('http://api.aviationstack.com/v1/flights', params)
     data = response.json()
-    response2 = requests.get('http://api.aviationstack.com/v1/flights', params2)
-    data2 = response2.json()
+    # response2 = requests.get('http://api.aviationstack.com/v1/flights', params2)
+    # data2 = response2.json()
     
-    data_all = data['data'] + data2['data']
+    data_all = data['data'] #+ data2['data']
     
     title = f"Flight Stats | {dep.upper()} - {arr.upper()}"
     
