@@ -17,43 +17,38 @@ load_figure_template('darkly')
 app.layout = dbc.Container([
     html.H2(id='title', children="Real-Time Scheduled & Active Flight Stats", style = {'text-align':'center','font-weight':'bold','font-size':35, 'font-family':'sans-serif'}),
     dbc.Row(dcc.Link('Powered by aviationstack',href = 'https://aviationstack.com/'), style = {'text-align':'center','font-size':20}),
-    dbc.Row([
-        dbc.Col([
+    # dbc.Row([
+    #     dbc.Col([
         
-        html.H3('Origin Airport:', style={'margin-bottom':15, 'font-size':25, 'font-family':'sans-serif'}),
-        dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 11})]),
-        dbc.Col([
-        html.H3('Destination Airport:', style={'margin-bottom':15,'font-size':25, 'font-family':'sans-serif'}),
-        dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 11})])], style = {'text-align':'center'}),
-        html.Br(),
+    #     html.H3('Origin Airport:', style={'margin-bottom':15, 'font-size':25, 'font-family':'sans-serif'}),
+    #     dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 11})]),
+    #     dbc.Col([
+    #     html.H3('Destination Airport:', style={'margin-bottom':15,'font-size':25, 'font-family':'sans-serif'}),
+    #     dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 11})])], style = {'text-align':'center'}),
+    #     html.Br(),
         dbc.Row(
         html.Button('View Stats', id='submit', style = {'margin-bottom':10,'width':300, 'margin-left':420,'border-radius':30,'background-color':'green','color':'white'}), style = {'text-align':'center'}),
         dbc.Row([
         dbc.Col([
             dcc.Graph(id='pie')
-        ]),
-        dbc.Col(dbc.Row(
-            dcc.Graph(id='bar')),
-        )])
+        ])
         
     
-])
+])])
 
-@app.callback(Output("submit", "n_clicks"),Output('title','children'),Output('pie','figure'), Output('bar','figure'), Input('dep','value'), Input('arr','value'), Input('submit','n_clicks'))
-def view_stats(dep, arr, clicks):
-    if not clicks:
-        raise PreventUpdate
+@app.callback(Output('title','children'),Output('pie','figure'))
+def view_stats():
 
     params = {
       'access_key': '349746e955fc67b11e41ece61dfad998',
-        'dep_iata':dep,
-        'arr_iata':arr,
+        'dep_iata':'SFO',
+        'arr_iata':'LAX',
         'flight_status':'scheduled'
     }
     params2 = {
       'access_key': '349746e955fc67b11e41ece61dfad998',
-        'dep_iata':dep,
-        'arr_iata':arr,
+        'dep_iata':'SFO',
+        'arr_iata':'LAX',
         'flight_status':'active'
     }
 
@@ -64,7 +59,7 @@ def view_stats(dep, arr, clicks):
     
     data_all = data['data'] + data2['data']
     
-    title = f"Flight Stats | {dep.upper()} - {arr.upper()}"
+    title = f"Flight Stats"
     
     airlines = []
     delayed = []
@@ -116,15 +111,7 @@ def view_stats(dep, arr, clicks):
 
     df = pd.DataFrame(list(zip(airlines, delayed,iata)), columns=['Airline','Delay Status','Count'])
     figure = px.pie(df.groupby('Airline').count().reset_index(),values='Count',names='Airline', hole = 0.7, title='Airline Market Share')
-    figure2 = px.bar(df.groupby(['Airline','Delay Status']).count().reset_index(),x='Airline',y='Count',
-                      color='Delay Status',
-                      color_discrete_map={
-                          'N/A':'yellow',
-                          'On Time':'green',
-                          'Delayed':'red'
-                      }, title = 'On Time vs Delay')
-    clicks = None
-    return clicks,title, figure, figure2
+    return title, figure
     
 
 if __name__ == '__main__':
