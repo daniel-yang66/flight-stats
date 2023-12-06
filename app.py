@@ -21,10 +21,10 @@ app.layout = dbc.Container([
         dbc.Col([
         
         html.H3('Origin Airport:', style={'margin-bottom':15, 'font-size':25, 'font-family':'sans-serif'}),
-        dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 10})]),
+        dcc.Input(id='dep',type='text', placeholder='Departure Airport', style = {'text-align':'center','border-radius': 11})]),
         dbc.Col([
         html.H3('Destination Airport:', style={'margin-bottom':15,'font-size':25, 'font-family':'sans-serif'}),
-        dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 10})])], style = {'text-align':'center'}),
+        dcc.Input(id='arr', type='text', placeholder='Arrival Airport', style = {'text-align':'center','border-radius': 11})])], style = {'text-align':'center'}),
         html.Br(),
         dbc.Row(
         html.Button('View Stats', id='submit', style = {'margin-bottom':10,'width':300, 'margin-left':420,'border-radius':30,'background-color':'green','color':'white'}), style = {'text-align':'center'}),
