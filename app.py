@@ -10,7 +10,6 @@ import plotly.express as px
 from datetime import datetime
 
 app = Dash(__name__, external_stylesheets = [dbc.themes.SLATE])
-server = app.server
 
 load_figure_template('darkly')
 
@@ -128,5 +127,5 @@ def view_stats(dep, arr, clicks):
     
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run()
 
