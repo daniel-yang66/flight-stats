@@ -103,13 +103,13 @@ def draw(loc,metric):
     df['conditions_new'] = cond_list
 
     df2 = df.groupby('conditions_new').count().reset_index()
-    df2 = df2.rename(columns = {'Temp':'Count'})
+    df2 = df2.rename(columns = {'Temp':'Count', 'conditions_new':'Weather'})
     
     df3 = df.groupby('Wind Direction').count().reset_index().sort_values(by='Temp', ascending=False)
     df3 = df3.rename(columns = {'Temp':'Count'})
     
     line = px.line(df, x='Time',y=metric, title = f'{metric} Over Time').update_traces(line_color='green')
-    donut = px.pie(df2, hole = 0.7, values = 'Count', names = 'conditions_new', title = 'Condition Outlook').update_layout(showlegend=False)
+    donut = px.pie(df2, hole = 0.7, values = 'Count', names = 'Weather', title = 'Condition Outlook').update_layout(showlegend=False)
     bar = px.bar(df3, x='Wind Direction', y='Count', title = 'Wind Direction Frequency').update_traces(marker_color = 'green')
     
     return line, donut, bar
